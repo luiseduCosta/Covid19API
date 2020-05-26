@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.NoSuchElementException;
+
 @RestControllerAdvice
 public class ExceptionConfig {
 	
@@ -18,7 +20,8 @@ public class ExceptionConfig {
 	}
 	
 	@ExceptionHandler({
-		ObjectNotFoundException.class
+		ObjectNotFoundException.class,
+		NoSuchElementException.class
 	})
 	public ResponseEntity<?> notFound(Exception ex) {
 		return ResponseEntity
