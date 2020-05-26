@@ -1,5 +1,8 @@
 package br.com.covid19;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,13 +19,18 @@ public class Covid19ApiApplication {
 	
 	public static void main(String[] args) throws InterruptedException {
 		SpringApplication.run(Covid19ApiApplication.class, args);
-		
 	}
 	
 	@Bean
 	public CommandLineRunner run()  {
 		return args -> {
-            //crawler.search();
+           long minutes = 50;
+           new Timer().scheduleAtFixedRate(new TimerTask() {
+        	   public void run() {
+        		   //crawler.search();
+				}
+           }, 0, minutes * 60000);
+			
 		};
 	}
 }

@@ -21,6 +21,11 @@ import br.com.covid19.api.cases.state_case.StateCaseService;
 @Component
 public class Crawler {
 	
+	private final String URL_BASE = "https://news.google.com/covid19/map?hl=pt-BR&gl=BR&ceid=BR:pt-419";
+	private final String XPathClick = "//*[@id=\"yDmH0d\"]/c-wiz/div/div[2]/div[2]/div[4]/div/div/div[2]/div/div[1]/table/thead";
+	private final String XPathLineTable = "//*[@id=\"yDmH0d\"]/c-wiz/div/div[2]/div[2]/div[4]/div/div/div[2]/div/div[1]/table/tbody/tr";
+	private final String URL_STATE = "https://news.google.com/covid19/map?hl=pt-BR&gl=BR&ceid=BR%3Apt-419&mid=%2Fm%2F";
+	
 	@Autowired
 	private CountryCaseService countryService;
 	@Autowired
@@ -68,13 +73,13 @@ public class Crawler {
 	private List<CountryCase> searchCountries() {
 		List<CountryCase> countryCases = new ArrayList<>();
 		
-		webDriver.get("https://news.google.com/covid19/map?hl=pt-BR&gl=BR&ceid=BR:pt-419");
+		webDriver.get(URL_BASE);
 		
 		//Clicando na div para listar todos os paises
-		webDriver.findElement(By.xpath("//*[@id=\"yDmH0d\"]/c-wiz/div/div[2]/div[2]/"
-				+ "div[5]/div/div/div[1]/div")).click();
-		List<WebElement> webElementsCountries = webDriver.findElements(By.xpath("//*[@id=\"yDmH0d\"]/c-wiz/div"
-				+ "/div[2]/div[2]/div[5]/div/div/div[1]/div/div[1]/table/tbody/tr"));
+		webDriver.findElement(By.xpath(XPathClick)).click();
+		
+		List<WebElement> webElementsCountries = webDriver
+				.findElements(By.xpath(XPathLineTable));
 		
 		for(WebElement elemCountry : webElementsCountries) {
 			String[] tableData = elemCountry.getText().split("\n");
@@ -102,16 +107,14 @@ public class Crawler {
 		//webDriver = new ChromeDriver(
 		//	new ChromeOptions().setHeadless(true)
 		//);
-		webDriver.get("https://news.google.com/covid19/map?hl=pt-"
-				+ "BR&gl=BR&ceid=BR%3Apt-419&mid=%2Fm%2F"+countryCase.getDataId());
+		webDriver.get(URL_STATE + countryCase.getDataId());
 		
 		//Clicando na div para listar todos os estados
-		webDriver.findElement(By.xpath("//*[@id=\"yDmH0d\"]/c-wiz/div/div[2]/div[2]/"
-				 + "div[5]/div/div/div[1]/div")).click();
+		webDriver.findElement(By.xpath(XPathClick)).click();
 		
 		//Acessando table
-		List<WebElement> webElementsStates = webDriver.findElements(By.xpath("//*[@id=\"yDmH0d\"]/c-wiz/div"
-				+ "/div[2]/div[2]/div[5]/div/div/div[1]/div/div[1]/table/tbody/tr"));
+		List<WebElement> webElementsStates = webDriver
+				.findElements(By.xpath(XPathLineTable));
 		
 		//Excluindo os dois primeiros elementos GLOBAL e PAÍS
 		webElementsStates = webElementsStates.subList(2, webElementsStates.size());

@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class CountryCaseDTO extends LocationDTO {
-	private String urlBandeira;
+	private String urlFlag;
 	
 	public static CountryCaseDTO create(CountryCase c) {
 		ModelMapper modelMapper = new ModelMapper();
