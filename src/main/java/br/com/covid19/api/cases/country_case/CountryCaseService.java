@@ -1,13 +1,18 @@
 package br.com.covid19.api.cases.country_case;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.internal.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.com.covid19.api.cases.MyPage;
 import br.com.covid19.api.cases.state_case.StateCaseDTO;
 import br.com.covid19.api.infra.exception.ObjectNotFoundException;
 
@@ -33,6 +38,10 @@ public class CountryCaseService {
 	
 	public List<CountryCaseDTO> findByNameBeginsWith(String name) {
 		List<CountryCase> countryCases = repository.findByNameBeginsWith(name);
+		
+		if (countryCases.size() == 0)
+			throw new NoSuchElementException("No value present");
+		
 		return countryCases
 				.stream()
 				.map(CountryCaseDTO::create)
@@ -41,7 +50,11 @@ public class CountryCaseService {
 	
 	public List<StateCaseDTO> getStatesByCounty(Long country_id) {
 		Optional<CountryCase> c = repository.findById(country_id);
-	
+		
+		if (!c.isPresent())
+			throw new NoSuchElementException("No value present");
+		
+		c.get().getStatesCases().sort(Comparator.reverseOrder());
 		return c.get()
 				.getStatesCases()
 				.stream()
@@ -49,12 +62,16 @@ public class CountryCaseService {
 				.collect(Collectors.toList());
 	}
 	
-	public List<CountryCaseDTO> getAllCountryCase() {
-		return repository
-				.findAll()
-				.stream()
+	public MyPage<CountryCaseDTO> getAllCountryCase(Pageable pageable) {
+		Page<CountryCase> page = repository.findAll(pageable);
+		
+		List<CountryCaseDTO> listCountryCaseDTO = page.get()
 				.map(CountryCaseDTO::create)
 				.collect(Collectors.toList());
+		
+		return new MyPage<CountryCaseDTO>(pageable.getPageNumber() + 1,
+				page.getTotalPages(), page.getTotalElements(), listCountryCaseDTO
+		);
 	}
 	
 	public CountryCase save(CountryCase c) {
