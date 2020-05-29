@@ -35,9 +35,9 @@ public class Crawler {
 	private List<CountryCase> countryCases;
 	
 	public final void search() {	
-		System.setProperty("webdriver.chrome.driver", 
+		/*System.setProperty("webdriver.chrome.driver", 
 			new File("assets/chromedriver").getAbsolutePath()
-		);	
+		);*/	
 		webDriver = new ChromeDriver(
 			new ChromeOptions().setHeadless(true)
 		);
