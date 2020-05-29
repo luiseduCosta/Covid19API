@@ -22,7 +22,7 @@ import br.com.covid19.api.cases.state_case.StateCaseService;
 public class Crawler {
 	
 	private final String URL_BASE = "https://news.google.com/covid19/map?hl=pt-BR&gl=BR&ceid=BR:pt-419";
-	private final String XPathClick = "//*[@id=\"yDmH0d\"]/c-wiz/div/div[2]/div[2]/div[4]/div/div/div[2]/div/div[1]/table/thead";
+	private final String XPathHeaderTable = "//*[@id=\"yDmH0d\"]/c-wiz/div/div[2]/div[2]/div[4]/div/div/div[2]/div/div[1]/table/thead";
 	private final String XPathLineTable = "//*[@id=\"yDmH0d\"]/c-wiz/div/div[2]/div[2]/div[4]/div/div/div[2]/div/div[1]/table/tbody/tr";
 	private final String URL_STATE = "https://news.google.com/covid19/map?hl=pt-BR&gl=BR&ceid=BR%3Apt-419&mid=%2Fm%2F";
 	
@@ -43,7 +43,8 @@ public class Crawler {
 		);
 		
 		countryCases = searchCountries();
-		countryCases.remove(0);
+		countryCases.remove(0);		
+		
 		saveCountryStateCases();
 	}
 	
@@ -74,9 +75,8 @@ public class Crawler {
 		List<CountryCase> countryCases = new ArrayList<>();
 		
 		webDriver.get(URL_BASE);
-		
 		//Clicando na div para listar todos os paises
-		webDriver.findElement(By.xpath(XPathClick)).click();
+		webDriver.findElement(By.xpath(XPathHeaderTable)).click();
 		
 		List<WebElement> webElementsCountries = webDriver
 				.findElements(By.xpath(XPathLineTable));
@@ -104,13 +104,10 @@ public class Crawler {
 	
 	//OK
 	private void searchSaveStates(CountryCase countryCase) {
-		//webDriver = new ChromeDriver(
-		//	new ChromeOptions().setHeadless(true)
-		//);
 		webDriver.get(URL_STATE + countryCase.getDataId());
 		
 		//Clicando na div para listar todos os estados
-		webDriver.findElement(By.xpath(XPathClick)).click();
+		webDriver.findElement(By.xpath(XPathHeaderTable)).click();
 		
 		//Acessando table
 		List<WebElement> webElementsStates = webDriver

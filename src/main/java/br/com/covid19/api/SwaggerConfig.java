@@ -28,9 +28,11 @@ public class SwaggerConfig {
 	
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
-				.contact(new Contact("Luis Eduardo Costa Laurindo", "", "luiseduardocosta417@gmail.com"))
+				.contact(new Contact("Luis Eduardo Costa Laurindo", 
+						"https://github.com/luiseduCosta", 
+						"luiseduardocosta417@gmail.com"))
 				.title("Covid19 API")
-				.description("Documentação do Covid19 API")
+				.description("Covid19 API documentation")
 				.version("1.0")
 				.build();
 	}

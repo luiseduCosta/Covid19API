@@ -18,7 +18,7 @@ public class Covid19ApiApplication {
 	private Crawler crawler;
 	
 	public static void main(String[] args) throws InterruptedException {
-		SpringApplication.run(Covid19ApiApplication.class, args);
+		SpringApplication.run(Covid19ApiApplication.class, args);		
 	}
 	
 	@Bean
@@ -27,10 +27,9 @@ public class Covid19ApiApplication {
            long minutes = 50;
            new Timer().scheduleAtFixedRate(new TimerTask() {
         	   public void run() {
-        		   //crawler.search();
+        		   crawler.search();
 				}
            }, 0, minutes * 60000);
-			
 		};
-	}
+	} 
 }
