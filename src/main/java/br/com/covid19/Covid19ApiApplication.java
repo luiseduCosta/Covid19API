@@ -24,10 +24,10 @@ public class Covid19ApiApplication {
 	@Bean
 	public CommandLineRunner run()  {
 		return args -> {
-           long minutes = 50;
+           long minutes = 60;
            new Timer().scheduleAtFixedRate(new TimerTask() {
         	   public void run() {
-        		   //crawler.search();
+        		   crawler.search();
 				}
            }, 0, minutes * 60000);
 		};
